@@ -1,0 +1,11 @@
+{
+  "name": "wetube_test",
+  "version": "1.0.0",
+  "description": "Cloning Youtube with Vanilla and NodeJS",
+  "main": "index.js",
+  "author": "TY KIM",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

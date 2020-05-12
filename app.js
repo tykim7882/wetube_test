@@ -11,13 +11,17 @@ import globalRouter from "./routers/globalRouter";
 import routes from "./routes";
 
 const app = express();
-app.set("view engine", "pug");
 
 // const handleHome = (req, res) => res.send("Hello from Home sssseeees!");
 // const handleProfile = (req, res) => res.send("You are on my profile!");
 
 // middleware
 app.use(helmet());
+app.set("view engine", "pug");
+// express.static : directory 에서 file을 보내주는 미들웨어, controller나 view 확인 안함
+// /uploads라는 경로로 올 경우 고정적으로 uploads 디렉토리로 고정설정, 파일만 확인
+app.use("/uploads", express.static("uploads"));
+
 app.use(cookieParser()); // user의 정보를 쿠키에 저장, session 관리
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ exteded: true })); // 서버가 유저로부터 전달받은 데이터를 이해

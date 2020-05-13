@@ -4,10 +4,14 @@ block content
     .search__header
         h3 Seaching for : #{searchingBy}
     .search__videos
-        each video in videos
-            +videoBlock({
-                title:video.title,
-                videoFile:video.videoFile,
-                views:video.views,
-                discription:video.description
-            })
+        if videos.length === 0
+            h5 No Videos Found
+        else 
+            each item in videos
+                +videoBlock({
+                    title:item.title,
+                    videoFile:item.fileUrl,
+                    views:item.views,
+                    discription:item.description,
+                    id:item.id
+                })

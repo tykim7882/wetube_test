@@ -24,12 +24,22 @@ export const home = async (req, res) => {
 // export const videoDetail = (req, res) => res.send("videoDetail");
 // export const editVideo = (req, res) => res.send("editVideo");
 // export const deleteVideo = (req, res) => res.send("deleteVideo");
-export const search = (req, res) => {
+export const search = async (req, res) => {
   //   console.log(req.query);
   //const {query:{term}} = req;
   const {
     query: { term: searchingBy },
   } = req; // searchingBy 라는 값으로 정의
+
+  let videos = [];
+  try {
+    videos = await Video.find({
+      title: { $regex: searchingBy, $options: "i" },
+    }); // $options: "i"  insensitive
+  } catch (error) {
+    console.log(error);
+  }
+
   //res.render("search", { pageTitle: "Search", searchingBy: searchingBy });
   res.render("search", { pageTitle: "Search", searchingBy, videos }); // 정의한 값과 전달대상값이 같으면 생략 가능
 };

@@ -1,6 +1,7 @@
 import routes from "./routes";
 import multer from "multer";
 
+// upload되는 파일의 경로를 설정
 const multerVideo = multer({ dest: "uploads/videos/" });
 
 export const localsMiddleware = (req, res, next) => {

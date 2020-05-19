@@ -2,14 +2,11 @@ extends layouts/main
 include mixins/videoBlock
 
 block content
-    .video
-        each video in videos
-            //- h1=video.title
-            //- p=video.description
+    .home-videos
+        each item in videos 
             +videoBlock({
-                id:video.id,
-                title:video.title,
-                videoFile:video.fileUrl,
-                views:video.views,
-                discription:video.description
+                id:item.id,
+                title:item.title,
+                views:item.views,
+                videoFile:item.fileUrl
             })

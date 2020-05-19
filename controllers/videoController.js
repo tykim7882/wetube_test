@@ -1,4 +1,3 @@
-// import { videos } from "../db";
 import routes from "../routes";
 import Video from "../models/Video";
 
@@ -18,12 +17,6 @@ export const home = async (req, res) => {
   }
 };
 
-// export const search = (req, res) => res.send("Search");
-// export const videos = (req, res) => res.send("Video index");
-// export const upload = (req, res) => res.send("upload");
-// export const videoDetail = (req, res) => res.send("videoDetail");
-// export const editVideo = (req, res) => res.send("editVideo");
-// export const deleteVideo = (req, res) => res.send("deleteVideo");
 export const search = async (req, res) => {
   //   console.log(req.query);
   //const {query:{term}} = req;
@@ -48,12 +41,6 @@ export const getUpload = (req, res) =>
   res.render("upload", { pageTitle: "Upload" });
 
 export const postUpload = async (req, res) => {
-  // console.log(req.body);
-  // const {
-  //   body: { file, title, description }
-  // } = req;
-  //console.log(req);
-
   const {
     body: { title, description },
     file: { path },
@@ -64,8 +51,6 @@ export const postUpload = async (req, res) => {
     description,
   });
   // todo : uplaod and save video
-  // res.render("upload", { pageTitle: "Upload" });
-  //res.redirect(routes.videoDetail(100005));
   console.log(newVideo);
   res.redirect(routes.videoDetail(newVideo.id));
 };

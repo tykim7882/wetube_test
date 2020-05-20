@@ -3,6 +3,10 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import passport from "passport";
+import mongoose from "mongoose";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 import { localsMiddleware } from "./middlewares";
 // import { userRouter } from "./routers/userRouter";
 import userRouter from "./routers/userRouter";
@@ -10,10 +14,11 @@ import videoRouter from "./routers/videoRouter";
 import globalRouter from "./routers/globalRouter";
 import routes from "./routes";
 
+import "./passport";
+
 const app = express();
 
-// const handleHome = (req, res) => res.send("Hello from Home sssseeees!");
-// const handleProfile = (req, res) => res.send("You are on my profile!");
+const CookieStore = MongoStore(session);
 
 // middleware
 app.use(helmet());
@@ -27,9 +32,16 @@ app.use(cookieParser()); // user의 정보를 쿠키에 저장, session 관리
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ exteded: true })); // 서버가 유저로부터 전달받은 데이터를 이해
 app.use(morgan("dev"));
-
-// app.get("/", handleHome);
-// app.get("/profile", handleProfile);
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: true,
+    saveUninitialized: false,
+    store: new CookieStore({ mongooseConnection: mongoose.connection }),
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // routes.js 에 정의된 값을 사용하기 위한 미들웨어 생성
 app.use(localsMiddleware);

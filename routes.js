@@ -12,6 +12,7 @@ const USERS = "/users";
 const USER_DETAIL = "/:id"; // localhost:4000/users/05B, 변하는 값 (:붙임)
 const EDIT_PROFILE = "/edit-profile";
 const CHANGE_PASSWORD = "/change-password";
+const ME = "/me";
 
 // Video
 
@@ -21,6 +22,10 @@ const VIDEO_DETAL = "/:id";
 const EDIT_VIDEO = "/:id/edit";
 const DELETE_VIDEO = "/:id/delete";
 
+// Github
+const GITHUB = "/auth/github";
+const GITHUB_CALLBACK = "/auth/github/callback";
+
 const routes = {
   home: HOME,
   join: JOIN,
@@ -28,6 +33,7 @@ const routes = {
   logout: LOGOUT,
   search: SEARCH,
   users: USERS,
+  me: ME,
   // userDetail: USER_DETAIL,
   userDetail: (id) => {
     if (id) {
@@ -61,6 +67,8 @@ const routes = {
       return DELETE_VIDEO;
     }
   },
+  github: GITHUB,
+  githubCallback: GITHUB_CALLBACK,
 };
 
 export default routes;

@@ -40,13 +40,54 @@ export const postLogin = passport.authenticate("local", {
   successRedirect: routes.home,
 });
 
-export const logout = (req, res) => {
-  // process log out
+export const githubLogin = passport.authenticate("github");
+
+// 필요없는 prams(accessToken,refreshToken ) 는 명시방법 변경
+export const githubLoginCallback = async (_, __, profile, cb) => {
+  // console.log(accessToken, refreshToken, profile, cb);
+  const {
+    _json: { id, avatar_url: avatarUrl, name, email },
+  } = profile;
+
+  try {
+    const user = await User.findOne({ email });
+    console.log(user);
+    if (user) {
+      user.githubId = id;
+      user.save();
+      return cb(null, user);
+    }
+
+    const newUser = await User.create({
+      email,
+      name,
+      githubId: id,
+      avatarUrl,
+    });
+    return cb(null, newUser);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const postGithubLogin = (req, res) => {
   res.redirect(routes.home);
 };
 
-export const userDetail = (req, res) =>
+export const logout = (req, res) => {
+  // process log out
+  req.logout();
+  res.redirect(routes.home);
+};
+
+export const getMe = (req, res) => {
+  res.render("userDetail", { pageTitle: "User Detail", user: req.user });
+};
+
+export const userDetail = (req, res) => {
   res.render("userDetail", { pageTitle: "User Detail" });
+};
+
 export const editProfile = (req, res) =>
   res.render("editProfile", { pageTitle: "Edit Profile" });
 export const changePassword = (req, res) =>

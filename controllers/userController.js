@@ -74,6 +74,41 @@ export const postGithubLogin = (req, res) => {
   res.redirect(routes.home);
 };
 
+// npm install -g localtunnel
+//lt -h http://serverless.social -p 4000 (매번 주소가 변경됨)
+
+export const facebookLogin = passport.authenticate("facebook");
+
+export const facebookLoginCallback = async (_, __, profile, cb) => {
+  //console.log(accessToken, refreshToken, profile, cb);
+  const {
+    _json: { id, name, email },
+  } = profile;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (user) {
+      user.facebookId = id;
+      user.save();
+      return cb(null, user);
+    }
+
+    const newUser = await User.create({
+      email,
+      name,
+      facebookId: id,
+      avatarUrl: `https://graph.facebook.com/${id}/picture?type=large`,
+    });
+  } catch (error) {
+    return cb(error);
+  }
+};
+
+export const postFacebookLogin = (req, res) => {
+  res.redirect(routes.home);
+};
+
 export const logout = (req, res) => {
   // process log out
   req.logout();
@@ -84,8 +119,17 @@ export const getMe = (req, res) => {
   res.render("userDetail", { pageTitle: "User Detail", user: req.user });
 };
 
-export const userDetail = (req, res) => {
-  res.render("userDetail", { pageTitle: "User Detail" });
+export const userDetail = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+
+  try {
+    const user = await User.findById(id);
+    res.render("userDetail", { pageTitle: "User Detail", user });
+  } catch (error) {
+    res.redirect(routes.home);
+  }
 };
 
 export const editProfile = (req, res) =>

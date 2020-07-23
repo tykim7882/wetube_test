@@ -46,10 +46,17 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "dev:server": "nodemon --exec babel-node init.js --delay 2 --ignore 'scss' ",
-    "dev:assets": "cross-env WEBPACK_ENV=development webpack -w",
-    "build:assets": "cross-env WEBPACK_ENV=production webpack",
-    "tunnel": "lt -h http://serverless.social -p 4000"
+    "dev:server": "nodemon --exec babel-node src/init.js --delay 2 --ignore '.scss' --ignore 'static' ",
+    "dev:assets": "cd src && cross-env WEBPACK_ENV=development webpack -w'",
+    "build:assets": "cd src && cross-env WEBPACK_ENV=production webpack",
+    "build:server": "babel src --out-dir build --ignore 'src/assets','src/static','src/webpack.config.js'",
+    "copyAll1": "cd \"C:\\nomad\\wetube_test\\build\" && xcopy \"C:\\nomad\\wetube_test\\src\\static\" \"C:\\nomad\\wetube_test\\build\\static\"  /c /y /h /e",
+    "copyAll2": "cd \"C:\\nomad\\wetube_test\\build\" && mkdir views && xcopy \"C:\\nomad\\wetube_test\\src\\views\" \"C:\\nomad\\wetube_test\\build\\views\"  /c /y /h /e",
+    "build": "npm run build:server && npm run build:assets && npm run copyAll2 && npm run copyAll1",
+    "tunnel": "lt -h http://serverless.social -p 4000",
+    "start": "cross-env PRODUCTION=true node build/init.js",
+    "prebuild": "rd /s \"build\"",
+    "prestart": "npm run build"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

@@ -12,6 +12,10 @@ import {
   getMe,
   facebookLogin,
   postFacebookLogin,
+  postInstagramLogin,
+  instagramLogin,
+  kakaoTalkLogin,
+  postKakaoTalkLogin,
 } from "../controllers/userController";
 import { onlyPublic, onlyPrivate } from "../middlewares";
 import passport from "passport";
@@ -30,6 +34,10 @@ globalRouter.get(routes.search, search);
 
 globalRouter.get(routes.logout, onlyPrivate, logout);
 
+globalRouter.get(routes.me, getMe);
+
+// GitHub Login
+
 globalRouter.get(routes.github, githubLogin);
 
 globalRouter.get(
@@ -38,13 +46,33 @@ globalRouter.get(
   postGithubLogin
 );
 
-globalRouter.get(routes.me, getMe);
+// Facebook Login
 
 globalRouter.get(routes.facebook, facebookLogin);
 globalRouter.get(
   routes.facebookCallback,
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   postFacebookLogin
+);
+
+// instagram Login
+
+globalRouter.get(routes.instagram, instagramLogin);
+
+globalRouter.get(
+  routes.instagramCallback,
+  passport.authenticate("instagram", { failureRedirect: "/login" }),
+  postInstagramLogin
+);
+
+// kakaotalk Login
+
+globalRouter.get(routes.kakaotalk, kakaoTalkLogin);
+
+globalRouter.get(
+  routes.kakaoTalkCallback,
+  passport.authenticate("kakao", { failureRedirect: "/login" }),
+  postKakaoTalkLogin
 );
 
 export default globalRouter;

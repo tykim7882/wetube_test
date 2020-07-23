@@ -1,5 +1,6 @@
 import routes from "../routes";
 import Video from "../models/Video";
+import Comment from "../models/Comment";
 
 // export const home = (req, res) => res.send("Home");
 export const home = async (req, res) => {
@@ -8,7 +9,7 @@ export const home = async (req, res) => {
     // 이 곳에서 시간이 걸리는 작업이 있더라도 기다리지 않고
     // 다음 작업(render) 실행, async 를 추가해야 선작업이 끝난 후 진행
     const videos = await Video.find({}).sort({ _id: -1 }); // await: 작업이 끝날때까지 대기시킴 / find: db에 있는 모든 VIdoe를 가져옴
-    console.log(videos);
+    //console.log(videos);
     // throw Error("lalalalal");
     res.render("home", { pageTitle: "Home", videos }); //veiws/home.pug 를 찾는다
   } catch (error) {
@@ -43,15 +44,18 @@ export const getUpload = (req, res) =>
 export const postUpload = async (req, res) => {
   const {
     body: { title, description },
-    file: { path },
+    file: { location },
   } = req;
   const newVideo = await Video.create({
     fileUrl: path,
     title,
     description,
+    creator: req.user.id,
   });
   // todo : uplaod and save video
-  console.log(newVideo);
+  //console.log(newVideo);
+  req.user.videos.push(newVideo.id);
+  req.user.save();
   res.redirect(routes.videoDetail(newVideo.id));
 };
 
@@ -63,7 +67,9 @@ export const videoDetail = async (req, res) => {
   } = req;
 
   try {
-    const video = await Video.findById(id);
+    const video = await Video.findById(id)
+      .populate("creator")
+      .populate("comments");
     console.log(video);
     res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
@@ -79,7 +85,11 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    if (String(video.creator) !== req.user.id) {
+      throw Error();
+    } else {
+      res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    }
   } catch (error) {
     console.log(error);
     res.redirect(routes.home);
@@ -111,11 +121,13 @@ export const deleteVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    console.log(video); // video.fileUrl
-    console.log(video.fileUrl);
-
-    await Video.findOneAndDelete({ _id: id });
-
+    //console.log(video); // video.fileUrl
+    //console.log(video.fileUrl);
+    if (String(video.creator) !== req.user.id) {
+      throw Error();
+    } else {
+      await Video.findOneAndDelete({ _id: id });
+    }
     // db삭제가 성공하면 해당 경로의 파일도 삭제
     fs.unlink(`${video.fileUrl}`, (err) => {
       if (err) throw err;
@@ -127,4 +139,46 @@ export const deleteVideo = async (req, res) => {
     console.log(error);
   }
   res.redirect(routes.home);
+};
+
+// Register Video View
+
+export const postRegisterView = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    video.views += 1;
+    video.save();
+    res.status(200);
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+// Add Comment
+
+export const postAddComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { comment },
+    user,
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    const newComment = await Comment.create({
+      text: comment,
+      creator: user.id,
+    });
+    video.comments.push(newComment.id);
+    video.save();
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+  } finally {
+    res.end();
+  }
 };

@@ -16,7 +16,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
-      callbackURL: `http://localhost:4000${routes.githubCallback}`,
+      callbackURL: `https://intense-peak-88035.herokuapp.com/${routes.githubCallback}`,
     },
     githubLoginCallback
   )
@@ -27,7 +27,7 @@ passport.use(
     {
       clientID: process.env.KAKAO_CLIENT_ID,
       clientSecret: process.env.KAKAO_CLIENT_SECRET, // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
-      callbackURL: `http://localhost:4000${routes.kakaoTalkCallback}`,
+      callbackURL: `https://intense-peak-88035.herokuapp.com/${routes.kakaoTalkCallback}`,
     },
     kakaoTalkLoginCallback
   )

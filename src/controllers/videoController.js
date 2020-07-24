@@ -2,6 +2,8 @@ import routes from "../routes";
 import Video from "../models/Video";
 import Comment from "../models/Comment";
 import aws from "aws-sdk";
+import dotenv from "dotenv";
+dotenv.config();
 
 // export const home = (req, res) => res.send("Home");
 export const home = async (req, res) => {
@@ -126,31 +128,35 @@ export const deleteVideo = async (req, res) => {
       throw Error();
     } else {
       await Video.findOneAndDelete({ _id: id });
+
+      console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+      const s3 = new aws.S3({
+        accessKeyId: process.env.SSS_AWS_KEY,
+        secretAccessKey: process.env.SSS_AWS_PRIVATE_KEY,
+      });
+
+      const params_s3 = {
+        Bucket: "wetube-final",
+        Key: id, //if any sub folder-> path/of/the/folder.ext
+      };
+
+      await s3.headObject(params_s3).promise();
+      console.log("File Found in S3");
+      try {
+        await s3.deleteObject(params_s3).promise();
+        console.log("file deleted Successfully");
+      } catch (err) {
+        console.log("ERROR in file Deleting : " + JSON.stringify(err));
+      }
+
+      console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2");
     }
     // db삭제가 성공하면 해당 경로의 파일도 삭제
     // fs.unlink(`${video.fileUrl}`, (err) => {
     //   if (err) throw err;
     //   console.log(`${video.fileUrl} was deleted!!`);
     // });
-
-    const s3 = new AWS.S3({
-      accessKeyId: process.env.SSS_AWS_KEY,
-      secretAccessKey: process.env.SSS_AWS_PRIVATE_KEY,
-    });
-
-    const params_s3 = {
-      Bucket: "wetube-final",
-      Key: id, //if any sub folder-> path/of/the/folder.ext
-    };
-
-    await s3.headObject(params_s3).promise();
-    console.log("File Found in S3");
-    try {
-      await s3.deleteObject(params_s3).promise();
-      console.log("file deleted Successfully");
-    } catch (err) {
-      console.log("ERROR in file Deleting : " + JSON.stringify(err));
-    }
   } catch (error) {
     console.log(error);
   } finally {

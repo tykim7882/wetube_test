@@ -115,6 +115,11 @@ export const postEditVideo = async (req, res) => {
 
 const fs = require("fs");
 
+const s3 = new AWS.S3({
+  accessKeyId: process.env.SSS_AWS_KEY,
+  secretAccessKey: process.env.SSS_AWS_PRIVATE_KEY,
+});
+
 export const deleteVideo = async (req, res) => {
   const {
     params: { id },
@@ -127,10 +132,24 @@ export const deleteVideo = async (req, res) => {
       await Video.findOneAndDelete({ _id: id });
     }
     // db삭제가 성공하면 해당 경로의 파일도 삭제
-    fs.unlink(`${video.fileUrl}`, (err) => {
-      if (err) throw err;
-      console.log(`${video.fileUrl} was deleted!!`);
-    });
+    // fs.unlink(`${video.fileUrl}`, (err) => {
+    //   if (err) throw err;
+    //   console.log(`${video.fileUrl} was deleted!!`);
+    // });
+
+    const params_s3 = {
+      Bucket: "wetube-final",
+      Key: id, //if any sub folder-> path/of/the/folder.ext
+    };
+
+    await s3.headObject(params_s3).promise();
+    console.log("File Found in S3");
+    try {
+      await s3.deleteObject(params_s3).promise();
+      console.log("file deleted Successfully");
+    } catch (err) {
+      console.log("ERROR in file Deleting : " + JSON.stringify(err));
+    }
   } catch (error) {
     console.log(error);
   } finally {

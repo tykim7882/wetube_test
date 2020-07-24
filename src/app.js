@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ exteded: true })); // 서버가 유저로부터 
 app.use(morgan("dev"));
 app.use(
   session({
-    secret: process.env.COOkIE_SECRET,
+    secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     store: new CookieStore({ mongooseConnection: mongoose.connection }),

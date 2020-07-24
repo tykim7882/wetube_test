@@ -56,7 +56,6 @@
     "build": "npm run build:server && npm run build:assets && npm run copyAll2 && npm run copyAll1",
     "tunnel": "lt -h http://serverless.social -p 4000",
     "start": "cross-env PRODUCTION=true node build/init.js",
-    "prebuild": "shx rm -r build",
     "prestart": "npm run build"
   },
   "devDependencies": {

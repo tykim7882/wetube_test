@@ -130,7 +130,7 @@ export const deleteVideo = async (req, res) => {
       await Video.findOneAndDelete({ _id: id });
 
       console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" + id);
-      const file_url = video.fileUrl.split("/"); // video에 저장된 fileUrl을 가져옴
+      const url = video.fileUrl.split("/"); // video에 저장된 fileUrl을 가져옴
       const delFileName = url[url.length - 1]; // 버킷에 저장된 객체 URL만 가져옴
 
       const s3 = new aws.S3({

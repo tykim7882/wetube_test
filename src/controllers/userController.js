@@ -89,7 +89,7 @@ export const instagramLogin = passport.authenticate("instagram", {
 });
 
 export const instagramLoginCallback = async (_, __, profile, cb) => {
-  console.log(profile, cb);
+  //console.log(profile, cb);
   /*
   const {
     _json: { id, avatar_url: avatarUrl, name, email },
@@ -139,9 +139,7 @@ export const kakaoTalkLoginCallback = async (_, __, profile, cb) => {
   //console.log(id, name, avatarUrl, email);
 
   try {
-    const user = await User.findOne({
-      email: email ? email : `kakao_${name}`,
-    });
+    const user = await User.findOne({ email });
 
     if (user) {
       user.kakaoId = id;

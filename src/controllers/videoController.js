@@ -130,6 +130,8 @@ export const deleteVideo = async (req, res) => {
       await Video.findOneAndDelete({ _id: id });
 
       console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" + id);
+      const file_url = video.fileUrl.split("/"); // video에 저장된 fileUrl을 가져옴
+      const delFileName = url[url.length - 1]; // 버킷에 저장된 객체 URL만 가져옴
 
       const s3 = new aws.S3({
         accessKeyId: process.env.SSS_AWS_KEY,
@@ -138,7 +140,7 @@ export const deleteVideo = async (req, res) => {
 
       const params_s3 = {
         Bucket: "wetube-final/video",
-        Key: `${id}`, //if any sub folder-> path/of/the/folder.ext
+        Key: delFileName, //if any sub folder-> path/of/the/folder.ext
       };
 
       await s3.headObject(params_s3).promise();

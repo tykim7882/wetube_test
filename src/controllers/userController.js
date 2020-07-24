@@ -139,7 +139,9 @@ export const kakaoTalkLoginCallback = async (_, __, profile, cb) => {
   //console.log(id, name, avatarUrl, email);
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      email: email ? email : `kakao_${name}`,
+    });
 
     if (user) {
       user.kakaoId = id;

@@ -57,13 +57,13 @@ globalRouter.get(
 
 // instagram Login
 
-// globalRouter.get(routes.instagram, instagramLogin);
+globalRouter.get(routes.instagram, instagramLogin);
 
-// globalRouter.get(
-//   routes.instagramCallback,
-//   passport.authenticate("instagram", { failureRedirect: "/login" }),
-//   postInstagramLogin
-// );
+globalRouter.get(
+  routes.instagramCallback,
+  passport.authenticate("instagram", { failureRedirect: "/login" }),
+  postInstagramLogin
+);
 
 // kakaotalk Login
 

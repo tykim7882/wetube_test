@@ -14,14 +14,14 @@ const multerVideo = multer({
   storage: multerS3({
     s3,
     acl: "public-read",
-    bucket: "ty-wetube/video",
+    bucket: "wetube-final/video",
   }),
 });
 const multerAvatar = multer({
   storage: multerS3({
     s3,
     acl: "public-read",
-    bucket: "ty-wetube/avatar",
+    bucket: "wetube-final/avatar",
   }),
 });
 
@@ -34,7 +34,7 @@ export const uproadVideo = multerVideo.single("videoFile");
 export const uploadAvatar = multerAvatar.single("avatar");
 
 export const localsMiddleware = (req, res, next) => {
-  res.locals.siteName = "Wetube";
+  res.locals.siteName = "Wetube ~ Nomad Challenge ~";
   res.locals.routes = routes;
   res.locals.loggedUser = req.user || null;
   // console.log(req.user);

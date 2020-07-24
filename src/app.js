@@ -37,7 +37,7 @@ app.use(morgan("dev"));
 app.use(
   session({
     secret: process.env.COOKIE_SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     store: new CookieStore({ mongooseConnection: mongoose.connection }),
   })

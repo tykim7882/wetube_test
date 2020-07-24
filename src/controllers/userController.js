@@ -82,42 +82,42 @@ export const postGithubLogin = (req, res) => {
 };
 
 // // instagram login
-// export const instagramLogin = passport.authenticate("instagram", {
-//   successFlash: "Welcome",
-//   failureFlash: "Can't log in at this time",
-// });
+export const instagramLogin = passport.authenticate("instagram", {
+  successFlash: "Welcome",
+  failureFlash: "Can't log in at this time",
+});
 
-// export const instagramLoginCallback = async (_, __, profile, cb) => {
-//   console.log(profile, cb);
-//   /*
-//   const {
-//     _json: { id, avatar_url: avatarUrl, name, email },
-//   } = profile;
+export const instagramLoginCallback = async (_, __, profile, cb) => {
+  console.log(profile, cb);
+  /*
+  const {
+    _json: { id, avatar_url: avatarUrl, name, email },
+  } = profile;
 
-//   try {
-//     const user = await User.findOne({ email });
-//     console.log(user);
-//     if (user) {
-//       user.githubId = id;
-//       user.save();
-//       return cb(null, user);
-//     }
+  try {
+    const user = await User.findOne({ email });
+    console.log(user);
+    if (user) {
+      user.githubId = id;
+      user.save();
+      return cb(null, user);
+    }
 
-//     const newUser = await User.create({
-//       email,
-//       name,
-//       githubId: id,
-//       avatarUrl,
-//     });
-//     return cb(null, newUser);
-//   } catch (error) {
-//     console.log(error);
-//   }*/
-// };
+    const newUser = await User.create({
+      email,
+      name,
+      githubId: id,
+      avatarUrl,
+    });
+    return cb(null, newUser);
+  } catch (error) {
+    console.log(error);
+  }*/
+};
 
-// export const postInstagramLogin = (req, res) => {
-//   res.redirect(routes.home);
-// };
+export const postInstagramLogin = (req, res) => {
+  res.redirect(routes.home);
+};
 
 // kakaotalk Login
 

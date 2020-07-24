@@ -11,10 +11,6 @@ mongoose.connect(
   }
 );
 
-// mongoose.connect(process.env.MONGO_URL, {
-//   useNewUrlParser: true,
-//   useFindAndModify: false,
-// });
 mongoose.connection
   .once("open", function () {
     console.log("Conection has been made!");

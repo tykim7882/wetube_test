@@ -74,7 +74,7 @@ export const videoDetail = async (req, res) => {
     const video = await Video.findById(id)
       .populate("creator")
       .populate("comments");
-    console.log(video);
+    //console.log(video);
     res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
     console.log(error);
@@ -129,7 +129,7 @@ export const deleteVideo = async (req, res) => {
     } else {
       await Video.findOneAndDelete({ _id: id });
 
-      console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" + id);
 
       const s3 = new aws.S3({
         accessKeyId: process.env.SSS_AWS_KEY,
@@ -137,15 +137,24 @@ export const deleteVideo = async (req, res) => {
       });
 
       const params_s3 = {
-        Bucket: "wetube-final",
-        Key: id, //if any sub folder-> path/of/the/folder.ext
+        Bucket: "wetube-final/video",
+        Key: `${id}`, //if any sub folder-> path/of/the/folder.ext
       };
 
       await s3.headObject(params_s3).promise();
       console.log("File Found in S3");
       try {
-        await s3.deleteObject(params_s3).promise();
-        console.log("file deleted Successfully");
+        //await s3.deleteObject(params_s3).promise();
+        //console.log("file deleted Successfully");
+        s3.deleteObject(params_s3, function (err, data) {
+          if (err) {
+            console.log("aws video delete error");
+            console.log(err, err.stack);
+            res.redirect(routes.home);
+          } else {
+            console.log("aws video delete success" + data);
+          }
+        });
       } catch (err) {
         console.log("ERROR in file Deleting : " + JSON.stringify(err));
       }
@@ -225,8 +234,6 @@ export const postDeleteComment = async (req, res) => {
   try {
     const video = await Video.findById(id);
     const comments = await Comment.findById(commentId);
-
-    console.log("--- " + comments.creator);
 
     if (String(comments.creator) !== req.user.id) {
       throw Error();

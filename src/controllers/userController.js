@@ -1,6 +1,8 @@
 import passport from "passport";
 import routes from "../routes";
 import User from "../models/User";
+import aws from "aws-sdk";
+
 export const getJoin = (req, res) => {
   res.render("join", { pageTitle: "Join" });
 };
@@ -126,7 +128,7 @@ export const kakaoTalkLogin = passport.authenticate("kakao", {
   failureFlash: "Can't log in at this time",
 });
 export const kakaoTalkLoginCallback = async (_, __, profile, cb) => {
-  //console.log(profile, cb);
+  console.log(profile, cb);
   const {
     id,
     _json: {

@@ -1,6 +1,7 @@
 import routes from "../routes";
 import Video from "../models/Video";
 import Comment from "../models/Comment";
+import aws from "aws-sdk";
 
 // export const home = (req, res) => res.send("Home");
 export const home = async (req, res) => {
@@ -115,11 +116,6 @@ export const postEditVideo = async (req, res) => {
 
 const fs = require("fs");
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.SSS_AWS_KEY,
-  secretAccessKey: process.env.SSS_AWS_PRIVATE_KEY,
-});
-
 export const deleteVideo = async (req, res) => {
   const {
     params: { id },
@@ -136,6 +132,11 @@ export const deleteVideo = async (req, res) => {
     //   if (err) throw err;
     //   console.log(`${video.fileUrl} was deleted!!`);
     // });
+
+    const s3 = new AWS.S3({
+      accessKeyId: process.env.SSS_AWS_KEY,
+      secretAccessKey: process.env.SSS_AWS_PRIVATE_KEY,
+    });
 
     const params_s3 = {
       Bucket: "wetube-final",

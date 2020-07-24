@@ -7,7 +7,7 @@
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
-    "@babel/polyfill": "^7.8.7",
+    "@babel/polyfill": "^7.10.4",
     "@babel/preset-env": "^7.9.6",
     "autoprefixer": "^9.7.6",
     "aws-sdk": "^2.718.0",
@@ -42,6 +42,7 @@
     "postcss-loader": "^3.0.0",
     "pug": "^2.0.4",
     "sass-loader": "^8.0.2",
+    "shx": "^0.3.2",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
@@ -50,12 +51,12 @@
     "dev:assets": "cd src && cross-env WEBPACK_ENV=development webpack -w'",
     "build:assets": "cd src && cross-env WEBPACK_ENV=production webpack",
     "build:server": "babel src --out-dir build --ignore 'src/assets','src/static','src/webpack.config.js'",
-    "copyAll1": "cd \"C:\\nomad\\wetube_test\\build\" && xcopy \"C:\\nomad\\wetube_test\\src\\static\" \"C:\\nomad\\wetube_test\\build\\static\"  /c /y /h /e",
-    "copyAll2": "cd \"C:\\nomad\\wetube_test\\build\" && mkdir views && xcopy \"C:\\nomad\\wetube_test\\src\\views\" \"C:\\nomad\\wetube_test\\build\\views\"  /c /y /h /e",
+    "copyAll1": "shx cp -R src/static build",
+    "copyAll2": "shx cp -R src/views build",
     "build": "npm run build:server && npm run build:assets && npm run copyAll2 && npm run copyAll1",
     "tunnel": "lt -h http://serverless.social -p 4000",
     "start": "cross-env PRODUCTION=true node build/init.js",
-    "prebuild": "rd /s \"build\"",
+    "prebuild": "shx rm -r build",
     "prestart": "npm run build"
   },
   "devDependencies": {

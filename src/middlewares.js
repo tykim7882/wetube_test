@@ -5,8 +5,8 @@ import multer from "multer";
 
 // upload되는 파일의 경로를 설정
 const s3 = new aws.S3({
-  accessKeyId: process.env.AWS_KEY,
-  secretAccessKey: process.env.AWS_PRIVATE_KEY,
+  accessKeyId: process.env.SSS_AWS_KEY,
+  secretAccessKey: process.env.SSS_AWS_PRIVATE_KEY,
   region: "ap-northeast-1",
 });
 

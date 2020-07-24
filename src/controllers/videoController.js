@@ -128,8 +128,6 @@ export const deleteVideo = async (req, res) => {
       throw Error();
     } else {
       await Video.findOneAndDelete({ _id: id });
-
-      console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" + id);
       const url = video.fileUrl.split("/"); // video에 저장된 fileUrl을 가져옴
       const delFileName = url[url.length - 1]; // 버킷에 저장된 객체 URL만 가져옴
 
@@ -146,8 +144,6 @@ export const deleteVideo = async (req, res) => {
       await s3.headObject(params_s3).promise();
       console.log("File Found in S3");
       try {
-        //await s3.deleteObject(params_s3).promise();
-        //console.log("file deleted Successfully");
         s3.deleteObject(params_s3, function (err, data) {
           if (err) {
             console.log("aws video delete error");
@@ -155,13 +151,12 @@ export const deleteVideo = async (req, res) => {
             res.redirect(routes.home);
           } else {
             console.log("aws video delete success" + data);
+            res.redirect(routes.home);
           }
         });
       } catch (err) {
         console.log("ERROR in file Deleting : " + JSON.stringify(err));
       }
-
-      console.log("here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2");
     }
     // db삭제가 성공하면 해당 경로의 파일도 삭제
     // fs.unlink(`${video.fileUrl}`, (err) => {
